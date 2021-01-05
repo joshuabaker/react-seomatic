@@ -171,7 +171,7 @@ function SeomaticMetaScripts({ Head, metaScriptContainer }) {
 
   const container = JSON.parse(metaScriptContainer);
 
-  return Object.entries(container).map((entry) => {
+  return Object.entries(container).map((entry, index) => {
     if (!entry[0] || !entry[1]) {
       return null;
     }
@@ -184,7 +184,7 @@ function SeomaticMetaScripts({ Head, metaScriptContainer }) {
     }
 
     return (
-      <HeadWrapper Head={Head}>
+      <HeadWrapper key={index} Head={Head}>
         <script key={key} dangerouslySetInnerHTML={{ __html: script }} />
       </HeadWrapper>
     );
@@ -326,9 +326,9 @@ function HeadLinksWrapper({ Head, container }) {
       });
     })
     .map(
-      (props) =>
+      (props, index) =>
         props && (
-          <HeadWrapper Head={Head}>
+          <HeadWrapper key={index} Head={Head}>
             <link {...props} />
           </HeadWrapper>
         )
