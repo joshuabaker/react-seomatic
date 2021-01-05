@@ -1,17 +1,32 @@
-import React from 'react';
-import Head from 'next/head';
+import React from "react";
 
 /**
- * Renders SEOmatic data for a Next.js app.
- * @param {Object|null} metaJsonLdContainer
- * @param {Object|null} metaLinkContainer
- * @param {Object|null} metaScriptContainer
- * @param {Object|null} metaTagContainer
- * @param {Object|null} metaTitleContainer
+ * Renders SEOmatic `<head>` and `<body>` tags.
+ *
+ * @example
+ * <body>
+ *   <!-- ... -->
+ *   <Seomatic {...pageProps.entry.seomatic} />
+ * </body>
+ *
+ * @example
+ * // Next.js
+ * <body>
+ *   <!-- ... -->
+ *   <Seomatic Head={Head} {...pageProps.entry.seomatic} />
+ * </body>
+ *
+ * @param {Class|function|null} Head
+ * @param {string|null} metaJsonLdContainer
+ * @param {string|null} metaLinkContainer
+ * @param {string|null} metaScriptContainer
+ * @param {string|null} metaTagContainer
+ * @param {string|null} metaTitleContainer
  * @returns {JSX.Element}
  * @constructor
  */
 function Seomatic({
+  Head,
   metaJsonLdContainer,
   metaLinkContainer,
   metaScriptContainer,
@@ -20,22 +35,90 @@ function Seomatic({
 }) {
   return (
     <>
-      <SeomaticMetaJsonLdContainer metaJsonLdContainer={metaJsonLdContainer} />
-      <SeomaticMetaLinkContainer metaLinkContainer={metaLinkContainer} />
-      <SeomaticMetaScriptContainer metaScriptContainer={metaScriptContainer} />
-      <SeomaticMetaTagContainer metaTagContainer={metaTagContainer} />
-      <SeomaticMetaTitleContainer metaTitleContainer={metaTitleContainer} />
+      <SeomaticHead
+        Head={Head}
+        metaJsonLdContainer={metaJsonLdContainer}
+        metaLinkContainer={metaLinkContainer}
+        metaScriptContainer={metaScriptContainer}
+        metaTagContainer={metaTagContainer}
+        metaTitleContainer={metaTitleContainer}
+      />
+      <SeomaticBody metaScriptContainer={metaScriptContainer} />
     </>
   );
 }
 
 /**
+ * Renders SEOmatic `<head>` tags.
+ *
+ * @example
+ * <head>
+ *   <SeomaticHead {...pageProps.entry.seomatic} />
+ * </head>
+ *
+ * @example
+ * // Next.js
+ * <SeomaticHead Head={Head} {...pageProps.entry.seomatic} />
+ *
+ * @param {Class|function|null} Head
+ * @param {string|null} metaJsonLdContainer
+ * @param {string|null} metaLinkContainer
+ * @param {string|null} metaScriptContainer
+ * @param {string|null} metaTagContainer
+ * @param {string|null} metaTitleContainer
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function SeomaticHead({
+  Head,
+  metaJsonLdContainer,
+  metaLinkContainer,
+  metaScriptContainer,
+  metaTagContainer,
+  metaTitleContainer,
+}) {
+  return (
+    <>
+      <SeomaticMetaJsonLd
+        Head={Head}
+        metaJsonLdContainer={metaJsonLdContainer}
+      />
+      <SeomaticMetaLinks Head={Head} metaLinkContainer={metaLinkContainer} />
+      <SeomaticMetaScripts
+        Head={Head}
+        metaScriptContainer={metaScriptContainer}
+      />
+      <SeomaticMetaTags Head={Head} metaTagContainer={metaTagContainer} />
+      <SeomaticMetaTitle Head={Head} metaTitleContainer={metaTitleContainer} />
+    </>
+  );
+}
+
+/**
+ * Renders SEOmatic `<body>` tags.
+ *
+ * @example
+ * <body>
+ *   <!-- ... -->
+ *   <SeomaticBody {...pageProps.entry.seomatic} />
+ * </body>
+ *
+ * @param {string|null} metaScriptContainer
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function SeomaticBody({ metaScriptContainer }) {
+  return <SeomaticMetaBodyScripts metaScriptContainer={metaScriptContainer} />;
+}
+
+/**
  * Renders SEOmatic’s `metaJsonLdContainer` value.
- * @param {Object|null} metaJsonLdContainer
+ * @param {Class|function|null} Head
+ * @param {string|null} metaJsonLdContainer
  * @returns {JSX.Element|null}
  * @constructor
  */
-function SeomaticMetaJsonLdContainer({ metaJsonLdContainer }) {
+function SeomaticMetaJsonLd({ Head, metaJsonLdContainer }) {
   if (!metaJsonLdContainer) {
     return null;
   }
@@ -47,43 +130,41 @@ function SeomaticMetaJsonLdContainer({ metaJsonLdContainer }) {
   }
 
   return (
-    <Head>
+    <HeadWrapper Head={Head}>
       <script
-        key={'metaJsonLdContainer.mainEntityOfPage'}
+        key={"metaJsonLdContainer.mainEntityOfPage"}
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(container.mainEntityOfPage),
         }}
       />
-    </Head>
+    </HeadWrapper>
   );
 }
 
 /**
  * Renders SEOmatic’s `metaLinkContainer` value.
- * @param {Object|null} metaLinkContainer
+ * @param {Class|function|null} Head
+ * @param {string|null} metaLinkContainer
  * @returns {JSX.Element|null}
  * @constructor
  */
-function SeomaticMetaLinkContainer({ metaLinkContainer }) {
+function SeomaticMetaLinks({ Head, metaLinkContainer }) {
   if (!metaLinkContainer) {
     return null;
   }
 
-  return (
-    <Head>
-      <ContainerLinkTags container={JSON.parse(metaLinkContainer)} />
-    </Head>
-  );
+  return <HeadLinksWrapper container={JSON.parse(metaLinkContainer)} />;
 }
 
 /**
  * Renders SEOmatic’s `metaScriptContainer` value.
- * @param {Object|null} metaScriptContainer
- * @returns {unknown[]|null}
+ * @param {Class|function|null} Head
+ * @param {string|null} metaScriptContainer
+ * @returns {JSX.Element[]|null}
  * @constructor
  */
-function SeomaticMetaScriptContainer({ metaScriptContainer }) {
+function SeomaticMetaScripts({ Head, metaScriptContainer }) {
   if (!metaScriptContainer) {
     return null;
   }
@@ -96,78 +177,123 @@ function SeomaticMetaScriptContainer({ metaScriptContainer }) {
     }
 
     const key = entry[0];
-    const { script, bodyScript } = entry[1];
+    const { script } = entry[1];
+
+    if (!script) {
+      return null;
+    }
 
     return (
-      <>
-        {script && (
-          <Head>
-            <script key={key} dangerouslySetInnerHTML={{ __html: script }} />
-          </Head>
-        )}
-        {bodyScript && (
-          <div
-            key={key}
-            style={{ display: 'none !important' }}
-            dangerouslySetInnerHTML={{
-              __html: bodyScript,
-            }}
-          />
-        )}
-      </>
+      <HeadWrapper Head={Head}>
+        <script key={key} dangerouslySetInnerHTML={{ __html: script }} />
+      </HeadWrapper>
+    );
+  });
+}
+
+/**
+ * Renders SEOmatic’s `metaScriptContainer` value.
+ * @param {string|null} metaScriptContainer
+ * @returns {JSX.Element[]|null}
+ * @constructor
+ */
+function SeomaticMetaBodyScripts({ metaScriptContainer }) {
+  if (!metaScriptContainer) {
+    return null;
+  }
+
+  const container = JSON.parse(metaScriptContainer);
+
+  return Object.entries(container).map((entry) => {
+    if (!entry[0] || !entry[1]) {
+      return null;
+    }
+
+    const key = entry[0];
+    const { bodyScript } = entry[1];
+
+    if (!bodyScript) {
+      return null;
+    }
+
+    return (
+      <div
+        key={key}
+        style={{ display: "none !important" }}
+        dangerouslySetInnerHTML={{
+          __html: bodyScript,
+        }}
+      />
     );
   });
 }
 
 /**
  * Renders SEOmatic’s `metaTagContainer` value.
- * @param {Object|null} metaTagContainer
+ * @param {Class|function|null} Head
+ * @param {string|null} metaTagContainer
  * @returns {JSX.Element|null}
  * @constructor
  */
-function SeomaticMetaTagContainer({ metaTagContainer }) {
+function SeomaticMetaTags({ Head, metaTagContainer }) {
   if (!metaTagContainer) {
     return null;
   }
 
   return (
-    <Head>
-      <ContainerLinkTags container={JSON.parse(metaTagContainer)} />
-    </Head>
+    <HeadLinksWrapper container={JSON.parse(metaTagContainer)} Head={Head} />
   );
 }
 
 /**
  * Renders SEOmatic’s `metaTitleContainer` value.
- * @param {Object|null} metaTitleContainer
+ * @param {Class|function|null} Head
+ * @param {string|null} metaTitleContainer
  * @returns {JSX.Element|null}
  * @constructor
  */
-function SeomaticMetaTitleContainer({ metaTitleContainer }) {
+function SeomaticMetaTitle({ Head, metaTitleContainer }) {
   if (!metaTitleContainer) {
     return null;
   }
 
-  const { title } = JSON.parse(metaTitleContainer);
+  const container = JSON.parse(metaTitleContainer);
 
-  if (!title || !title.title) {
+  if (!container || !container.title || !container.title.title) {
     return null;
   }
 
   return (
-    <Head>
-      <title key={'title'}>{title.title}</title>
-    </Head>
+    <HeadWrapper Head={Head}>
+      <title>{container.title.title}</title>
+    </HeadWrapper>
   );
 }
 
 /**
- * Renders a container object as `link` tags.
- * @param {Object} container
- * @returns {JSX.Element[]}
+ * Enables support for `next/head` via the `Head` property.
+ * @param children
+ * @param Head
+ * @param props
+ * @returns {JSX.Element|*}
  * @constructor
  */
-function ContainerLinkTags({ container }) {
+function HeadWrapper({ children, Head, ...props }) {
+  if (Head) {
+    return <Head {...props}>{children}</Head>;
+  }
+
+  return children;
+}
+
+/**
+ * Parses a container object and returns an array of objects containing `link` properties.
+ * @param {Class|function|null} Head
+ * @param {Object} container
+ * @returns {Object[]}
+ * @constructor
+ */
+function HeadLinksWrapper({ Head, container }) {
   return Object.entries(container)
     .flatMap((entry) => {
       const key = entry[0];
@@ -199,15 +325,24 @@ function ContainerLinkTags({ container }) {
         };
       });
     })
-    .map((props) => props && <link {...props} />);
+    .map(
+      (props) =>
+        props && (
+          <HeadWrapper Head={Head}>
+            <link {...props} />
+          </HeadWrapper>
+        )
+    );
 }
 
 export {
-  SeomaticMetaJsonLdContainer,
-  SeomaticMetaLinkContainer,
-  SeomaticMetaScriptContainer,
-  SeomaticMetaTagContainer,
-  SeomaticMetaTitleContainer,
+  Seomatic,
+  SeomaticBody,
+  SeomaticHead,
+  SeomaticMetaBodyScripts,
+  SeomaticMetaJsonLd,
+  SeomaticMetaLinks,
+  SeomaticMetaScripts,
+  SeomaticMetaTags,
+  SeomaticMetaTitle,
 };
-
-export default Seomatic;
