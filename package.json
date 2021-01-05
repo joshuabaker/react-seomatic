@@ -1,6 +1,6 @@
 {
   "name": "react-seomatic",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Renders SEOmatic data for a Next.js app.",
   "source": "src/index.jsx",
   "main": "dist/index.js",
