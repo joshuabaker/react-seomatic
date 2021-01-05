@@ -37,9 +37,7 @@ return (
 
 #### Next.js
 
-When using Next.js the `Head` property is required, otherwise the tags won't be correctly picked up on client-side navigations.
-
-> `title`, `meta` or any other elements (e.g. `script`) need to be contained as direct children of the Head element
+When using Next.js the `Head` property is required, otherwise the tags won’t be correctly picked up on client-side navigations. See the [`next/head` documentation](https://nextjs.org/docs/api-reference/next/head) for further information on this.
 
 ```jsx
 import Head from 'next/head';
