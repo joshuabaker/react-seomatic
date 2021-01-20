@@ -1,6 +1,6 @@
 {
   "name": "react-seomatic",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Renders SEOmatic data for a Next.js app.",
   "source": "src/index.jsx",
   "main": "dist/index.js",
@@ -8,6 +8,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
+    "prepublishOnly": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
