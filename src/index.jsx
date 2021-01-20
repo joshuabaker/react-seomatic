@@ -154,7 +154,13 @@ function SeomaticMetaLinks({ Head, metaLinkContainer }) {
     return null;
   }
 
-  return <HeadLinksWrapper container={JSON.parse(metaLinkContainer)} />;
+  return (
+    <HeadTagsWrapper
+      container={JSON.parse(metaLinkContainer)}
+      Head={Head}
+      type={"link"}
+    />
+  );
 }
 
 /**
@@ -241,7 +247,11 @@ function SeomaticMetaTags({ Head, metaTagContainer }) {
   }
 
   return (
-    <HeadLinksWrapper container={JSON.parse(metaTagContainer)} Head={Head} />
+    <HeadTagsWrapper
+      container={JSON.parse(metaTagContainer)}
+      Head={Head}
+      type={"meta"}
+    />
   );
 }
 
@@ -287,13 +297,14 @@ function HeadWrapper({ children, Head, ...props }) {
 }
 
 /**
- * Parses a container object and returns an array of objects containing `link` properties.
+ * Parses a container object and renders out head tags (i.e. `link` or `meta`).
  * @param {Class|function|null} Head
  * @param {Object} container
+ * @param string|null type
  * @returns {Object[]}
  * @constructor
  */
-function HeadLinksWrapper({ Head, container }) {
+function HeadTagsWrapper({ Head, container, type }) {
   return Object.entries(container)
     .flatMap((entry) => {
       const key = entry[0];
@@ -329,7 +340,7 @@ function HeadLinksWrapper({ Head, container }) {
       (props, index) =>
         props && (
           <HeadWrapper key={index} Head={Head}>
-            <link {...props} />
+            {React.createElement(type, props)}
           </HeadWrapper>
         )
     );
