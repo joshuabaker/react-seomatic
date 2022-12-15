@@ -1,6 +1,6 @@
 {
   "name": "react-seomatic",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Renders SEOmatic data for a Next.js app.",
   "source": "src/index.jsx",
   "main": "dist/index.js",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/joshuabaker/react-seomatic#readme",
   "peerDependencies": {
-    "react": "^16.6.0 || ^17 | ^18"
+    "react": "^16.6.0 || ^17 || ^18"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
