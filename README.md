@@ -2,6 +2,9 @@
 
 React helper components for Craft’s [SEOmatic plugin](https://plugins.craftcms.com/seomatic).
 
+> **Note**
+> If you’re using the **Next.js App Router**, please use [`next-seomatic`](https://github.com/joshuabaker/next-seomatic) instead, which has support for the new metadata handling.
+
 ## Install
 
 ```
@@ -42,6 +45,9 @@ return (
 ```
 
 ### Next.js
+
+> **Note**
+> If you’re using the App Router, please use [`next-seomatic`](https://github.com/joshuabaker/next-seomatic) instead, which has support for the new metadata handling.
 
 When using Next.js the `Head` property is required, otherwise the tags won’t be correctly picked up on client-side navigations. See the [`next/head` documentation](https://nextjs.org/docs/api-reference/next/head) for further information on this.
 
