@@ -1,9 +1,14 @@
+> [!IMPORTANT]
+>
+> **This repository is no longer maintained.**
+
+> [!NOTE]
+> 
+> If you’re using the **Next.js App Router**, please use [`next-seomatic`](https://github.com/joshuabaker/next-seomatic) instead, which has support for the new metadata handling.
+
 # React SEOmatic
 
 React helper components for Craft’s [SEOmatic plugin](https://plugins.craftcms.com/seomatic).
-
-> **Note**
-> If you’re using the **Next.js App Router**, please use [`next-seomatic`](https://github.com/joshuabaker/next-seomatic) instead, which has support for the new metadata handling.
 
 ## Install
 
